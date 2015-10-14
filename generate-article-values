@@ -1,0 +1,17 @@
+for 1..300 -> $n {
+    my $content = "week$n".IO.slurp;
+    die $n if $content.index(chr(0x1a));
+    my $escaped_content = $content
+        .subst('&', '&amp;', :g)
+        .subst('"', '\\&quot;', :g)
+        .subst(q[\\'], '\\\\\\&apos;', :g)
+        .subst(q['], '\\&apos;', :g)
+        .subst('<', '&lt;', :g)
+        .subst('>', '&gt;', :g)
+        .subst('%', '%%', :g)
+        .subst('\\u', '\\\\u', :g)
+        .subst("\n", "\n\\n", :g)
+    ;
+
+    say qq[        <item>{$escaped_content}</item>];
+}
